@@ -2,8 +2,8 @@ import express from "express";
 import { createHash } from "crypto";
 import cors from "cors";
 import * as dotenv from "dotenv";
+import morgan from "morgan";
 import { Prisma, PrismaClient } from "@prisma/client";
-
 import { Router, Request, Response } from "express";
 
 const prisma = new PrismaClient();
@@ -14,6 +14,7 @@ dotenv.config();
 
 app.use(cors());
 app.use(express.json());
+app.use(morgan("tiny"));
 
 route.get("/shorten", async (req: Request, res: Response) => {
   const { url } = req.query;
@@ -39,7 +40,7 @@ route.get("/shorten", async (req: Request, res: Response) => {
   };
 
   const result = await prisma.urlMapping.create({ data: urlData });
-  console.log(`result ${result}`);
+  console.log(`result ${JSON.stringify(result)}`);
   res.json(result);
 });
 
